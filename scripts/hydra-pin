@@ -1,0 +1,23 @@
+#!/usr/bin/env node
+import pkgs from "../packages.json" with { type: "json" };
+const newestEval = await Promise.all(
+  pkgs.map(async (e) => [
+    e,
+    await fetch(
+      `https://hydra.nixos.org/job/nixos/trunk-combined/nixpkgs.${e}.x86_64-linux/latest`,
+      { headers: { accept: "application/json" } },
+    )
+      .then((e) => e.json())
+      .then((e) => e.jobsetevals.sort((b, a) => a - b)[0]),
+  ]),
+);
+newestEval.sort((a, b) => a[1] - b[1]);
+const rev = (
+  await (
+    await fetch(`https://hydra.nixos.org/eval/${newestEval[0][1]}`, {
+      headers: { accept: "application/json" },
+    })
+  ).json()
+).jobsetevalinputs.nixpkgs.revision;
+console.log(`last good commit for ${newestEval[0][0]} was https://github.com/NixOS/nixpkgs/commits/${rev}/`)
+console.log("run npins add github nixos nixpkgs -b nixos-unstable --at " + rev);
