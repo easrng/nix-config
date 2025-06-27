@@ -6,6 +6,6 @@ cd "$(dirname $0)/.."
 cmd=${1:-switch}
 shift
 
-# without --fast nixos-rebuild will compile nix and use the compiled nix to
+# without --no-reexec nixos-rebuild will compile nix and use the compiled nix to
 # evaluate the config, wasting several seconds
-sudo nixos-rebuild "$cmd" --fast --file src/nixos.nix --log-format bar-with-logs "$@"
+sudo nixos-rebuild "$cmd" --no-reexec --file src/nixos.nix --log-format bar-with-logs "$@"

@@ -1,5 +1,6 @@
 let
   sources = import ../npins;
+  lanzaboote = import sources.lanzaboote;
 in
 {
   pkgs,
@@ -9,9 +10,22 @@ in
 {
   imports = [
     /etc/nixos/hardware-configuration.nix
+    lanzaboote.nixosModules.lanzaboote
   ];
-  boot.loader.systemd-boot.enable = true;
+
+  # Lanzaboote currently replaces the systemd-boot module.
+  # This setting is usually set to true in configuration.nix
+  # generated at installation time. So we force it to false
+  # for now.
+  boot.loader.systemd-boot.enable = lib.mkForce false;
+
+  boot.lanzaboote = {
+    enable = true;
+    pkiBundle = "/var/lib/sbctl";
+  };
+
   boot.loader.efi.canTouchEfiVariables = true;
+
   networking.hostName = "thonkpad-nix";
   # Define your hostname.
   networking.networkmanager.enable = true;
@@ -199,10 +213,12 @@ in
   nix.package = pkgs.lix;
   nix.settings.substituters = [
     "https://cache.nixos.org/"
+    "https://nix-community.cachix.org"
     # "https://cache.dataaturservice.se/spectrum/"
   ];
   nix.settings.trusted-public-keys = [
     "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+    "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
     # "spectrum-os.org-2:foQk3r7t2VpRx92CaXb5ROyy/NBdRJQG2uX2XJMYZfU="
   ];
   nix.settings.allowed-users = [

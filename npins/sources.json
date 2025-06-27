@@ -1,17 +1,26 @@
 {
   "pins": {
-    "nixpkgs": {
-      "type": "Git",
+    "lanzaboote": {
+      "type": "GitRelease",
       "repository": {
         "type": "GitHub",
-        "owner": "nixos",
-        "repo": "nixpkgs"
+        "owner": "nix-community",
+        "repo": "lanzaboote"
       },
-      "branch": "nixos-unstable",
+      "pre_releases": false,
+      "version_upper_bound": null,
+      "release_prefix": null,
       "submodules": false,
-      "revision": "c2a03962b8e24e669fb37b7df10e7c79531ff1a4",
-      "url": "https://github.com/nixos/nixpkgs/archive/c2a03962b8e24e669fb37b7df10e7c79531ff1a4.tar.gz",
-      "hash": "1r4gklhwylxar9y2dxyikkzf3hl615dj1jzfy851p6kc33qm1ilm"
+      "version": "v0.4.2",
+      "revision": "f0212638a2ec787a7841882f4477d40ae24f0a5d",
+      "url": "https://api.github.com/repos/nix-community/lanzaboote/tarball/v0.4.2",
+      "hash": "0xc1wawnb0297h5khxblmf9pd1fry950xkcm7mwlck19s2906h80"
+    },
+    "nixpkgs": {
+      "type": "Channel",
+      "name": "nixos-unstable",
+      "url": "https://releases.nixos.org/nixos/unstable/nixos-25.11pre820854.30a61f056ac4/nixexprs.tar.xz",
+      "hash": "1ws51n0m8xksrdh2crrivw3bgc3iznpwpyp5pixr3282zj04czhz"
     }
   },
   "version": 5
