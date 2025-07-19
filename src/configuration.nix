@@ -93,8 +93,8 @@ in
   # virtualisation.virtualbox.host.enable = true;
   # virtualisation.vmware.host.enable = true;
   # users.extraGroups.vboxusers.members = [ "me" ];
-  # virtualisation.libvirtd.enable = true;
-  # programs.virt-manager.enable = true;
+  virtualisation.libvirtd.enable = true;
+  programs.virt-manager.enable = true;
   # virtualisation.virtualbox.host.enableExtensionPack = true;
   hardware.bluetooth.enable = true;
   # hardware.bluetooth.settings = {
