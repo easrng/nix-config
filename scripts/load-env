@@ -1,0 +1,21 @@
+#!/bin/sh
+(
+    update_env() {
+        nix-build ./src/config-env.nix -o env >/dev/null
+    }
+
+    if [ -e ./env ]; then
+        # shellcheck disable=SC1091
+        . ./env
+        if sha256sum --status -c "$ENV_HASH"; then
+            :
+        else
+            update_env
+        fi
+    else
+        update_env
+    fi
+)
+
+# shellcheck disable=SC1091
+. ./env

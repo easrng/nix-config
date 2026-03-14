@@ -1,0 +1,9 @@
+#!/bin/sh
+set -e
+cd "${0%/*}/.."
+
+# shellcheck disable=SC1091
+. scripts/load-env
+
+find -name '*.nix' -exec nixfmt {} \;
+jq sort packages.json | sponge packages.json

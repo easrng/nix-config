@@ -1,11 +1,14 @@
-#!/usr/bin/env bash
+#!/bin/sh
+set -e
+cd "${0%/*}/.."
 
-cd "$(dirname $0)/.."
+# shellcheck disable=SC1091
+. scripts/load-env
 
 # assume that if there are no args, you want to switch to the configuration
 cmd=${1:-switch}
-shift
+if [ ! -z ${1+x} ]; then shift; fi
 
 # without --no-reexec nixos-rebuild will compile nix and use the compiled nix to
 # evaluate the config, wasting several seconds
-sudo nixos-rebuild "$cmd" --no-reexec --file src/nixos.nix --log-format bar-with-logs "$@"
+nixos-rebuild "$cmd" --sudo --no-reexec --file src/nixos.nix --log-format bar-with-logs "$@"

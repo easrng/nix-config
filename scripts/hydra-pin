@@ -8,7 +8,8 @@ const newestEval = await Promise.all(
       { headers: { accept: "application/json" } },
     )
       .then((e) => e.json())
-      .then((e) => e.jobsetevals.sort((b, a) => a - b)[0]),
+      .then((e) => e.jobsetevals.sort((b, a) => a - b)[0])
+      .catch((err) => console.log(e,err)),
   ]),
 );
 newestEval.sort((a, b) => a[1] - b[1]);

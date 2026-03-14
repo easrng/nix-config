@@ -1,0 +1,12 @@
+#!/bin/sh
+set -e
+cd "${0%/*}/.."
+
+# shellcheck disable=SC1091
+. scripts/load-env
+
+# assume that if there are no args, you want to switch to the configuration
+cmd=${1:-switch}
+if [ ! -z ${1+x} ]; then shift; fi
+
+home-manager "$cmd" -f src/home.nix "$@"

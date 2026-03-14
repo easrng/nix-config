@@ -1,6 +1,5 @@
 let
   sources = import ../npins;
-  lanzaboote = import sources.lanzaboote;
 in
 {
   pkgs,
@@ -8,30 +7,13 @@ in
   ...
 }:
 {
-  imports = [
-    /etc/nixos/hardware-configuration.nix
-    lanzaboote.nixosModules.lanzaboote
-  ];
+  imports = [ /etc/nixos/hardware-configuration.nix ];
 
-  # Lanzaboote currently replaces the systemd-boot module.
-  # This setting is usually set to true in configuration.nix
-  # generated at installation time. So we force it to false
-  # for now.
-  boot.loader.systemd-boot.enable = lib.mkForce false;
-
-  boot.lanzaboote = {
-    enable = true;
-    pkiBundle = "/var/lib/sbctl";
-  };
-
+  boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
   networking.hostName = "thonkpad-nix";
-  # Define your hostname.
   networking.networkmanager.enable = true;
-  services.udev.packages = [
-    pkgs.android-udev-rules
-  ];
   # Enable mDNS
   services.avahi = {
     nssmdns4 = true;
@@ -45,23 +27,23 @@ in
       workstation = true;
     };
   };
-  time.timeZone = "America/New_York";
-  i18n.defaultLocale = "en_US.UTF-8";
+  time.timeZone = "Canada/Eastern";
+  i18n.defaultLocale = "en_CA.UTF-8";
   i18n.supportedLocales = [
     "C.UTF-8/UTF-8"
-    "en_US.UTF-8/UTF-8"
+    "en_CA.UTF-8/UTF-8"
     "ja_JP.UTF-8/UTF-8"
   ];
   i18n.extraLocaleSettings = {
-    LC_ADDRESS = "en_US.UTF-8";
-    LC_IDENTIFICATION = "en_US.UTF-8";
-    LC_MEASUREMENT = "en_US.UTF-8";
-    LC_MONETARY = "en_US.UTF-8";
-    LC_NAME = "en_US.UTF-8";
-    LC_NUMERIC = "en_US.UTF-8";
-    LC_PAPER = "en_US.UTF-8";
-    LC_TELEPHONE = "en_US.UTF-8";
-    LC_TIME = "en_US.UTF-8";
+    LC_ADDRESS = "en_CA.UTF-8";
+    LC_IDENTIFICATION = "en_CA.UTF-8";
+    LC_MEASUREMENT = "en_CA.UTF-8";
+    LC_MONETARY = "en_CA.UTF-8";
+    LC_NAME = "en_CA.UTF-8";
+    LC_NUMERIC = "en_CA.UTF-8";
+    LC_PAPER = "en_CA.UTF-8";
+    LC_TELEPHONE = "en_CA.UTF-8";
+    LC_TIME = "en_CA.UTF-8";
   };
   i18n.inputMethod = {
     type = "fcitx5";
@@ -82,6 +64,8 @@ in
   services.displayManager.defaultSession = "plasma";
   programs.dconf.enable = true;
   programs.kdeconnect.enable = true;
+  services.mullvad-vpn.enable = true;
+  services.mullvad-vpn.package = pkgs.mullvad-vpn;
   services.flatpak.enable = true;
   programs.appimage.enable = true;
   programs.appimage.binfmt = true;
@@ -96,6 +80,12 @@ in
   virtualisation.libvirtd.enable = true;
   programs.virt-manager.enable = true;
   # virtualisation.virtualbox.host.enableExtensionPack = true;
+  virtualisation.containers.enable = true;
+  virtualisation.podman = {
+    enable = true;
+    dockerCompat = true;
+    defaultNetwork.settings.dns_enabled = true; # Required for containers under podman-compose to be able to talk to each other.
+  };
   hardware.bluetooth.enable = true;
   # hardware.bluetooth.settings = {
   #   General = {
@@ -120,31 +110,8 @@ in
       "wheel"
       "libvirtd"
       "dialout"
+      "podman"
     ];
-    packages =
-      (map (
-        pkg:
-        (builtins.foldl' (acc: elem: builtins.getAttr elem acc) pkgs (
-          builtins.filter (e: builtins.typeOf e == "string") (builtins.split "\\." pkg)
-        ))
-      ) (lib.importJSON ../packages.json))
-      ++ (with pkgs; [
-        hyfetch
-        (callPackage ./breeze-noshadow.nix {
-        })
-        (callPackage ./oneshot.nix {
-        })
-        (nodejs_22.override {
-          enableNpm = false;
-        })
-        (corepack_22.overrideDerivation (oldAttrs: {
-          installPhase = ''
-            mkdir -p $out/bin
-            corepack enable --install-directory $out/bin
-            corepack enable --install-directory $out/bin npm
-          '';
-        }))
-      ]);
   };
   fonts = {
     enableDefaultPackages = true;
@@ -157,6 +124,7 @@ in
       fira-code
       cascadia-code
       roboto
+      inter
     ];
   };
   environment.systemPackages = with pkgs; [
@@ -168,9 +136,8 @@ in
     iw
     pv
     libglvnd
-    xorg.libX11
+    libx11
     fontconfig
-    xorg.libX11
   ];
   programs.nix-ld.enable = true;
   programs.nix-ld.libraries = with pkgs; [
@@ -184,32 +151,19 @@ in
     nativeMessagingHosts.packages = [
     ];
   };
-  environment.defaultPackages = [
-  ];
-  environment.sessionVariables = rec {
-    GOPATH = "$HOME/Code/go";
-    XDG_CACHE_HOME = "$HOME/.cache";
-    XDG_CONFIG_HOME = "$HOME/.config";
-    XDG_DATA_HOME = "$HOME/.local/share";
-    XDG_STATE_HOME = "$HOME/.local/state";
-    XDG_BIN_HOME = "$HOME/.local/bin";
-    PNPM_HOME = "$XDG_DATA_HOME/pnpm";
-    PATH = [
-      "${PNPM_HOME}"
-      "${GOPATH}/bin"
-      "${XDG_BIN_HOME}"
-      "$HOME/.dotnet/tools"
-    ];
-    DOTNET_ROOT = "${pkgs.dotnet-runtime_8}";
-    # NIXOS_OZONE_WL = "1";
-  };
+  environment.defaultPackages = [ ];
+  environment.extraInit = ''
+    . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
+  '';
   # Open ports in the firewall.
   # slsk
   #networking.firewall.allowedTCPPorts = [ 2234 ];
   #networking.firewall.allowedUDPPorts = [ 2234 ];
   # Or disable the firewall altogether.
   networking.firewall.enable = false;
-  nixpkgs.config.allowUnfree = true;
+  nixpkgs.config.allowUnfreePredicate =
+    pkg:
+    (builtins.match "^.*(firmware|facetimehd|mullvad|firefox).*$|corefonts" (lib.getName pkg)) != null;
   nix.package = pkgs.lix;
   nix.settings.substituters = [
     "https://cache.nixos.org/"

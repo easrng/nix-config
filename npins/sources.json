@@ -1,27 +1,31 @@
 {
   "pins": {
-    "lanzaboote": {
-      "type": "GitRelease",
+    "home-manager": {
+      "type": "Git",
       "repository": {
         "type": "GitHub",
         "owner": "nix-community",
-        "repo": "lanzaboote"
+        "repo": "home-manager"
       },
-      "pre_releases": false,
-      "version_upper_bound": null,
-      "release_prefix": null,
+      "branch": "master",
       "submodules": false,
-      "version": "v0.4.2",
-      "revision": "f0212638a2ec787a7841882f4477d40ae24f0a5d",
-      "url": "https://api.github.com/repos/nix-community/lanzaboote/tarball/v0.4.2",
-      "hash": "0xc1wawnb0297h5khxblmf9pd1fry950xkcm7mwlck19s2906h80"
+      "revision": "ef12a9a2b0f77c8fa3dda1e7e494fca668909056",
+      "url": "https://github.com/nix-community/home-manager/archive/ef12a9a2b0f77c8fa3dda1e7e494fca668909056.tar.gz",
+      "hash": "sha256-MPjR48roW7CUMU6lu0+qQGqj92Kuh3paIulMWFZy+NQ="
     },
     "nixpkgs": {
-      "type": "Channel",
-      "name": "nixos-unstable",
-      "url": "https://releases.nixos.org/nixos/unstable/nixos-25.11pre831064.6e987485eb2c/nixexprs.tar.xz",
-      "hash": "1m11dghl4nb9n5l4jc7yb85y0vqk3mqkqb7vyfd5n3mk4xijcjm2"
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "nixos",
+        "repo": "nixpkgs"
+      },
+      "branch": "nixos-unstable",
+      "submodules": false,
+      "revision": "c06b4ae3d6599a672a6210b7021d699c351eebda",
+      "url": "https://github.com/nixos/nixpkgs/archive/c06b4ae3d6599a672a6210b7021d699c351eebda.tar.gz",
+      "hash": "sha256-wvfdLLWJ2I9oEpDd9PfMA8osfIZicoQ5MT1jIwNs9Tk="
     }
   },
-  "version": 5
+  "version": 7
 }
