@@ -73,6 +73,12 @@ in
   services.tailscale.enable = true;
   services.printing.enable = true;
   services.printing.cups-pdf.enable = true;
+  services.sunshine = {
+    enable = true;
+    autoStart = true;
+    capSysAdmin = true;
+    openFirewall = true;
+  };
   virtualisation.waydroid.enable = true;
   # virtualisation.virtualbox.host.enable = true;
   # virtualisation.vmware.host.enable = true;
