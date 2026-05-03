@@ -64,6 +64,8 @@
   "qalculate-qt",
   "qbittorrent",
   "qdirstat",
+  "restic",
+  "ripgrep",
   "ruffle",
   "rustup",
   "samba",

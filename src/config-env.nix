@@ -30,6 +30,7 @@ pkgs.writeText "env" ''
       pkgs.lix
       pkgs.nixos-rebuild
       pkgs.systemd
+      pkgs.restic
     ]
   }:/run/wrappers/bin"
 ''

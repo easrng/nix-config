@@ -1,0 +1,2 @@
+#!/bin/sh
+exec sudo restic -r /run/media/me/myewna/restic backup --exclude={.git,.cache,cache,Code\ Cache,.rustup/toolchains,caches,app/build,StreamingAssets,.degit,.gradle,Trash,pnpm/store,.pnpm,node_modules,.cmake-js,.dotnet,.cobalt_storage,.vcpkg,.emscripten_cache,.nuget,Android/data,containers/storage,repo/objects,yarn/berry,assets/objects,appstream/flathub,Cache,flatpak/runtime,flatpak/app} /home /etc /srv /var
