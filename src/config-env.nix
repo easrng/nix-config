@@ -1,7 +1,6 @@
 let
   sources = import ../npins;
   pkgs = import sources.nixpkgs { };
-  home-manager = (import sources.home-manager) { };
   config-deps = [
     "src/config-env.nix"
     "npins/sources.json"
@@ -17,10 +16,14 @@ let
 in
 pkgs.writeText "env" ''
   export ENV_HASH="${config-env-hash}"
-  export NIX_PATH="home-manager=${sources.home-manager}:nixpkgs=${sources.nixpkgs}"
+  export NIX_PATH="nixpkgs=${sources.nixpkgs}"
   export PATH="${
     pkgs.lib.makeBinPath [
-      home-manager.home-manager
+      (
+        (pkgs.home-manager.override { nixos-option = pkgs.nixos-option.override { nix = pkgs.lix; }; })
+        .overrideAttrs
+        { src = sources.home-manager; }
+      )
       pkgs.bash
       pkgs.nixfmt
       pkgs.jq

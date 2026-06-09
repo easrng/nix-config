@@ -31,6 +31,9 @@
     ) (lib.importJSON ../packages.json))
     ++ (with pkgs; [
       hyfetch
+      (llama-cpp.overrideDerivation (old: {
+        NIX_CFLAGS_COMPILE = "-O4 -march=native";
+      }))
       (callPackage ./breeze-noshadow.nix {
       })
       (callPackage ./oneshot.nix {
