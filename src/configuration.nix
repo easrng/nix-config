@@ -11,6 +11,12 @@ in
 
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  boot.plymouth = {
+    enable = true;
+    theme = "breeze";
+  };
+  boot.loader.timeout = 0;
+  # boot.initrd.systemd.emergencyAccess = true;
 
   networking.hostName = "thonkpad-nix";
   networking.networkmanager.enable = true;
@@ -74,9 +80,9 @@ in
   services.printing.enable = true;
   services.printing.cups-pdf.enable = true;
   virtualisation.waydroid.enable = true;
-  # virtualisation.virtualbox.host.enable = true;
+  virtualisation.virtualbox.host.enable = true;
   # virtualisation.vmware.host.enable = true;
-  # users.extraGroups.vboxusers.members = [ "me" ];
+  users.extraGroups.vboxusers.members = [ "me" ];
   virtualisation.libvirtd.enable = true;
   programs.virt-manager.enable = true;
   # virtualisation.virtualbox.host.enableExtensionPack = true;

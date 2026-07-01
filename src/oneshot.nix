@@ -3,7 +3,7 @@
   lib,
   requireFile,
   makeWrapper,
-  libsForQt5,
+  qt6,
   goldberg-emu,
   libGL,
   openal,
@@ -16,7 +16,18 @@
 stdenv.mkDerivation {
   name = "oneshot-bin";
 
-  src = /home/me/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/OneShot;
+  src = requireFile {
+    name = "oneshot-src";
+    hashMode = "recursive";
+    sha256 = "08fjnc6ppnhxjz8j7rhn93ckaj8320q40s5v3cdywsvgspl5cbb4";
+    message = ''
+      OneShot not found.
+      1. download oneshot from steam
+      2. in a shell, execute:
+         nix store add-path /path/to/steamapps/common/OneShot --name 'oneshot-src'
+    '';
+    meta.license = [ ];
+  };
 
   buildInputs = [ makeWrapper ];
 
@@ -31,7 +42,22 @@ stdenv.mkDerivation {
     chmod a+x $out/share/applications/oneshot.desktop
     makeWrapper $out/oneshot/steamshim $out/bin/oneshot \
       --run "cd $out/oneshot" \
-      --prefix PATH : ${lib.makeBinPath [ libsForQt5.qt5.qttools ]} \
+      --prefix PATH : ${lib.makeBinPath [ qt6.qttools ]} \
+      --prefix LD_LIBRARY_PATH ":" ${
+        lib.makeLibraryPath [
+          goldberg-emu
+          libGL
+          openal
+          libxcrypt-legacy
+          libxkbcommon
+          stdenv.cc.cc.lib
+          glibc
+          zlib
+        ]
+      }
+    makeWrapper $out/oneshot/_______ $out/bin/_______ \
+      --run "cd $out/oneshot" \
+      --prefix PATH : ${lib.makeBinPath [ qt6.qttools ]} \
       --prefix LD_LIBRARY_PATH ":" ${
         lib.makeLibraryPath [
           goldberg-emu

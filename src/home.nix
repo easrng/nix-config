@@ -38,6 +38,11 @@
       })
       (callPackage ./oneshot.nix {
       })
+      (callPackage (builtins.fetchurl {
+        url = "https://raw.githubusercontent.com/Misaka13514/flake/e409750c5926543c9b8c80c1f91d0bb8c561c312/packages/ida-pro.nix";
+        name = "ida-pro.nix";
+        sha256 = "sha256-pUhFUKkmr13DQHz9S82ZnmSL8kiPat8ceHuvTNmIVNo=";
+      }) { })
     ]);
 
   home.file = {
@@ -71,4 +76,17 @@
     "${config.home.sessionVariables.XDG_BIN_HOME}"
     "$HOME/.dotnet/tools"
   ];
+
+  fonts.fontconfig = {
+    enable = true;
+    defaultFonts = {
+      emoji = [ "Telegram Color Emoji" ];
+    };
+  };
+  nixpkgs.config.allowUnfreePredicate =
+    pkg:
+    builtins.elem (lib.getName pkg) [
+      "ida-pro"
+    ];
+
 }
