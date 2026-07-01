@@ -80,7 +80,7 @@
   fonts.fontconfig = {
     enable = true;
     defaultFonts = {
-      emoji = [ "Telegram Color Emoji" ];
+      # emoji = [ "Telegram Color Emoji" ];
     };
   };
   nixpkgs.config.allowUnfreePredicate =
