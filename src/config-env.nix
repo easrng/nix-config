@@ -22,7 +22,7 @@ pkgs.writeText "env" ''
       (
         (pkgs.home-manager.override { nixos-option = pkgs.nixos-option.override { nix = pkgs.lix; }; })
         .overrideAttrs
-        { src = sources.home-manager; }
+          { src = sources.home-manager; }
       )
       pkgs.bash
       pkgs.nixfmt
@@ -31,7 +31,7 @@ pkgs.writeText "env" ''
       pkgs.findutils
       pkgs.moreutils
       pkgs.lix
-      pkgs.nixos-rebuild
+      (pkgs.nixos-rebuild.override { nix = pkgs.lix; })
       pkgs.systemd
       pkgs.restic
     ]

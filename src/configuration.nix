@@ -9,6 +9,10 @@ in
 {
   imports = [ /etc/nixos/hardware-configuration.nix ];
 
+  boot.kernelParams = [
+    "quiet"
+    "noresume"
+  ];
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.plymouth = {
@@ -70,17 +74,18 @@ in
   services.displayManager.defaultSession = "plasma";
   programs.dconf.enable = true;
   programs.kdeconnect.enable = true;
-  services.mullvad-vpn.enable = true;
-  services.mullvad-vpn.package = pkgs.mullvad-vpn;
+  # services.mullvad-vpn.enable = true;
+  # services.mullvad-vpn.package = pkgs.mullvad-vpn;
   services.flatpak.enable = true;
   programs.appimage.enable = true;
   programs.appimage.binfmt = true;
   services.fwupd.enable = true;
   services.tailscale.enable = true;
   services.printing.enable = true;
+  services.printing.drivers = [ pkgs.epson-escpr ];
   services.printing.cups-pdf.enable = true;
   virtualisation.waydroid.enable = true;
-  virtualisation.virtualbox.host.enable = true;
+  # virtualisation.virtualbox.host.enable = true;
   # virtualisation.vmware.host.enable = true;
   users.extraGroups.vboxusers.members = [ "me" ];
   virtualisation.libvirtd.enable = true;
@@ -100,6 +105,10 @@ in
   # };
   hardware.enableRedistributableFirmware = true;
   security.rtkit.enable = true;
+  security.pki.caCertificateBlacklist = [
+    "Comodo AAA Services root"
+    "emSign ECC Root CA - G3"
+  ];
   services.pipewire = {
     enable = true;
     alsa.enable = true;
@@ -190,7 +199,10 @@ in
   # > below. Given that this is literally the default config for flake-based
   # > NixOS installations in the upcoming NixOS 24.05, future Nix/Lix releases
   # > will not get away with breaking it.
-  nix.settings.experimental-features = "nix-command flakes";
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
   nix.nixPath = [ "nixpkgs=flake:nixpkgs" ];
   nixpkgs.flake.source = sources.nixpkgs;
 
