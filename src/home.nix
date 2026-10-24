@@ -27,6 +27,20 @@ let
       sha256 = "sha256-pUhFUKkmr13DQHz9S82ZnmSL8kiPat8ceHuvTNmIVNo=";
     }) { })
   ];
+  withPipewire =
+    drv:
+    pkgs.symlinkJoin {
+      name = "${drv.name}-with-pipewire";
+      paths = [ drv ];
+      buildInputs = [ pkgs.makeWrapper ];
+      postBuild = ''
+        ls "$out/bin"
+        for b in "$out/bin/"*; do
+          wrapProgram "$b" \
+            --prefix LD_LIBRARY_PATH : "${pkgs.pipewire.jack}/lib"
+        done
+      '';
+    };
 in
 {
   # Home Manager needs a bit of information about you and the paths it should
@@ -62,13 +76,14 @@ in
       })
       (callPackage ./breeze-noshadow.nix {
       })
+      (withPipewire mixxx)
       (callPackage ./opencode-sandboxed.nix {
       })
       (runCommand "kept-sources"
         { srcs = "${builtins.concatStringsSep "\n" (builtins.map (f: f.src.outPath) keepSrc)}"; }
         ''
-          mkdir -p $out/nix-support
-          printf "%s" "$srcs" >$out/nix-support/sources
+          mkdir -p $out/share/nix-support
+          printf "%s" "$srcs" >$out/share/nix-support/sources
         ''
       )
     ]);
