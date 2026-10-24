@@ -26,15 +26,13 @@ in
   networking.networkmanager.enable = true;
   # Enable mDNS
   services.avahi = {
+    enable = true;
     nssmdns4 = true;
     nssmdns6 = true;
-    enable = true;
-    ipv4 = true;
-    ipv6 = true;
-    publish = {
-      enable = true;
-      addresses = true;
-      workstation = true;
+    settings.publish = {
+      disable-publishing = false;
+      publish-addresses = true;
+      publish-workstation = true;
     };
   };
   time.timeZone = "Canada/Eastern";
@@ -107,7 +105,6 @@ in
   security.rtkit.enable = true;
   security.pki.caCertificateBlacklist = [
     "Comodo AAA Services root"
-    "emSign ECC Root CA - G3"
   ];
   services.pipewire = {
     enable = true;
